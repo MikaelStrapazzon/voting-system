@@ -1,12 +1,13 @@
 services:
   oracle-db:
-    image: gvenzl/oracle-free:23-slim-faststart
+    image: gvenzl/oracle-free:23-slim
     container_name: oracle-xe
     ports:
       - "1521:1521"
     environment:
       ORACLE_DATABASE: votingsystem
-      ORACLE_PASSWORD: dev_db_admin_password
+      TARGET_PDB: votingsystem
+      ORACLE_PASSWORD: votingsystem
       APP_USER: dev_db_user
       APP_USER_PASSWORD: dev_db_password
     volumes:
