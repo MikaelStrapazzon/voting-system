@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,11 @@ public class VoteSessionServiceImpl implements VoteSessionService {
 
   private final VoteSessionRepository voteSessionRepository;
   private final VoteSessionMapper voteSessionMapper;
+
+  @Override
+  public Optional<VoteSession> findById(Integer id) {
+    return voteSessionRepository.findById(id);
+  }
 
   @Override
   @Transactional
