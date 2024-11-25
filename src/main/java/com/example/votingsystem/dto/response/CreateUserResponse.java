@@ -1,3 +1,5 @@
 package com.example.votingsystem.dto.response;
 
-public record CreateUserResponse(String message) {}
+import java.time.LocalDateTime;
+
+public record CreateUserResponse(Integer id, String name, String cpf, LocalDateTime createdAt) {}
