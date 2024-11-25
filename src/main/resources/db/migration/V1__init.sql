@@ -29,7 +29,6 @@ CREATE TABLE votes
 CREATE TABLE session_results
 (
     vote_session_id NUMBER REFERENCES vote_sessions (id) ON DELETE CASCADE PRIMARY KEY,
-    total_votes     NUMBER NOT NULL,
     votes_yes       NUMBER NOT NULL,
     votes_no        NUMBER NOT NULL,
     non_voters      NUMBER NOT NULL,
