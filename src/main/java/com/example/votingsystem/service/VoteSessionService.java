@@ -4,10 +4,13 @@ import com.example.votingsystem.dto.VoteDto;
 import com.example.votingsystem.dto.VoteSessionOpenDto;
 import com.example.votingsystem.entity.Vote;
 import com.example.votingsystem.entity.VoteSession;
+import java.util.List;
 import java.util.Optional;
 
 public interface VoteSessionService {
   Optional<VoteSession> findById(Integer id);
+
+  List<VoteSession> findAllNeedClose();
 
   Boolean existVote(Integer voteSessionId, Integer userId);
 

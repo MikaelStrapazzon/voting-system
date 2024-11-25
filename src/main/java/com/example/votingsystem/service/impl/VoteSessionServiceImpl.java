@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,11 @@ public class VoteSessionServiceImpl implements VoteSessionService {
   @Override
   public Optional<VoteSession> findById(Integer id) {
     return voteSessionRepository.findById(id);
+  }
+
+  @Override
+  public List<VoteSession> findAllNeedClose() {
+    return voteSessionRepository.findNeedClose();
   }
 
   @Override
