@@ -12,7 +12,8 @@ CREATE TABLE vote_sessions
     title       VARCHAR2(255) NOT NULL,
     description VARCHAR2(1500),
     start_time  TIMESTAMP     NOT NULL,
-    end_time    TIMESTAMP     NOT NULL
+    end_time    TIMESTAMP     NOT NULL,
+    open        BOOLEAN       NOT NULL
 );
 
 CREATE TABLE votes
