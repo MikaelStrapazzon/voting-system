@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class VoteDto {
-  private Integer user;
-  private Integer voteSession;
+  private Integer userId;
+  private Integer voteSessionId;
   private Boolean vote;
 }
