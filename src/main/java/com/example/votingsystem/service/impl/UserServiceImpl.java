@@ -2,7 +2,7 @@ package com.example.votingsystem.service.impl;
 
 import com.example.votingsystem.dto.UserCreateDto;
 import com.example.votingsystem.entity.User;
-import com.example.votingsystem.exception.custom.ValidationException;
+import com.example.votingsystem.exception.custom.EntityValidationException;
 import com.example.votingsystem.mapper.UserMapper;
 import com.example.votingsystem.repository.UserRepository;
 import com.example.votingsystem.service.UserService;
@@ -31,8 +31,8 @@ public class UserServiceImpl implements UserService {
   }
 
   private User processData(User user) {
-    if (user.getUsername() != null) {
-      user.setUsername(user.getUsername().trim());
+    if (user.getName() != null) {
+      user.setName(user.getName().trim());
     }
 
     if (user.getCpf() != null) {
@@ -45,9 +45,9 @@ public class UserServiceImpl implements UserService {
   private void validateUser(User user) {
     Map<String, String> errors = new HashMap<>();
 
-    if (user.getUsername() == null || user.getUsername().isEmpty()) {
+    if (user.getName() == null || user.getName().isEmpty()) {
       errors.put("username", "Username is required");
-    } else if (user.getUsername().length() > 50) {
+    } else if (user.getName().length() > 50) {
       errors.put("username", "Username cannot exceed 50 characters");
     }
 
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     if (!errors.isEmpty()) {
-      throw new ValidationException(errors);
+      throw new EntityValidationException(errors);
     }
   }
 }

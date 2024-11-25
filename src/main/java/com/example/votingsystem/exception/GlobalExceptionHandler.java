@@ -3,7 +3,7 @@ package com.example.votingsystem.exception;
 import com.example.votingsystem.dto.response.generic.ErrorDetailsFieldResponse;
 import com.example.votingsystem.dto.response.generic.ErrorField;
 import com.example.votingsystem.dto.response.generic.ErrorResponse;
-import com.example.votingsystem.exception.custom.ValidationException;
+import com.example.votingsystem.exception.custom.EntityValidationException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
@@ -20,9 +20,9 @@ public class GlobalExceptionHandler {
         new ErrorResponse(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  @ExceptionHandler(ValidationException.class)
+  @ExceptionHandler(EntityValidationException.class)
   public ResponseEntity<ErrorDetailsFieldResponse> handleCustomValidationExceptions(
-      ValidationException ex, WebRequest request) {
+      EntityValidationException ex, WebRequest request) {
     List<ErrorField> details =
         ex.getErrors().entrySet().stream()
             .map(entry -> new ErrorField(entry.getKey(), entry.getValue()))
