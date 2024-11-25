@@ -8,6 +8,7 @@ import com.example.votingsystem.repository.UserRepository;
 import com.example.votingsystem.service.UserService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,10 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final UserMapper userMapper;
+
+  public Optional<User> findByCpf(String cpf) {
+    return userRepository.findByCpf(cpf);
+  }
 
   @Override
   @Transactional
@@ -56,6 +61,8 @@ public class UserServiceImpl implements UserService {
       errors.put("cpf", "CPF is required");
     } else if (user.getCpf().length() != 11) {
       errors.put("cpf", "CPF must be exactly 11 digits");
+    } else if (findByCpf(user.getCpf()).isPresent()) {
+      errors.put("cpf", "CPF already registered");
     }
 
     if (!errors.isEmpty()) {
