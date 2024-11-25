@@ -1,17 +1,21 @@
 package com.example.votingsystem.service.impl;
 
+import com.example.votingsystem.dto.VoteDto;
 import com.example.votingsystem.dto.VoteSessionOpenDto;
+import com.example.votingsystem.entity.Vote;
 import com.example.votingsystem.entity.VoteSession;
 import com.example.votingsystem.exception.custom.EntityValidationException;
 import com.example.votingsystem.mapper.VoteSessionMapper;
+import com.example.votingsystem.repository.VoteRepository;
 import com.example.votingsystem.repository.VoteSessionRepository;
+import com.example.votingsystem.service.UserService;
 import com.example.votingsystem.service.VoteSessionService;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +25,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class VoteSessionServiceImpl implements VoteSessionService {
 
+  private final UserService userService;
+
   private final VoteSessionRepository voteSessionRepository;
+  private final VoteRepository voteRepository;
+
   private final VoteSessionMapper voteSessionMapper;
 
   @Override
   public Optional<VoteSession> findById(Integer id) {
     return voteSessionRepository.findById(id);
+  }
+
+  @Override
+  public Boolean existVote(Integer voteSessionId, Integer userId) {
+    return voteRepository.existsByVoteSessionIdAndUserId(voteSessionId, userId);
   }
 
   @Override
@@ -46,6 +59,60 @@ public class VoteSessionServiceImpl implements VoteSessionService {
     validateVoteSession(processData(voteSession, voteSessionStartDto.getDuration()));
 
     return voteSessionRepository.save(voteSession);
+  }
+
+  @Override
+  @Transactional
+  public Vote voteInSession(VoteDto voteDto) {
+    Vote vote = voteSessionMapper.voteDtoToVote(voteDto);
+
+    validateVote(processVote(vote));
+
+    return voteRepository.save(vote);
+  }
+
+  private Vote processVote(Vote vote) {
+    return vote;
+  }
+
+  private void validateVote(Vote vote) {
+    Map<String, String> errors = new HashMap<>();
+
+    if (vote.getUserId() == null || userService.existsById(vote.getUserId())) {
+      errors.put("userId", "User not informed or does not exist");
+    }
+
+    if (vote.getVoteSessionId() != null) {
+      var voteSession = findById(vote.getVoteSessionId());
+
+      if (voteSession.isEmpty()) {
+        errors.put("voteSessionId", "Vote session does not exist");
+      } else if (!voteSession.get().getOpen()) {
+        errors.put(
+            "voteSessionId",
+            "Vote session is closed in "
+                + voteSession
+                    .get()
+                    .getEndTime()
+                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+      }
+    } else {
+      errors.put("voteSessionId", "Vote session is required");
+    }
+
+    if (vote.getVote() == null) {
+      errors.put("vote", "Vote is required");
+    }
+
+    if (errors.isEmpty() && existVote(vote.getVoteSessionId(), vote.getUserId())) {
+      errors.put(
+          "vote",
+          "User " + vote.getUserId() + " has already voted in session " + vote.getVoteSessionId());
+    }
+
+    if (!errors.isEmpty()) {
+      throw new EntityValidationException(errors);
+    }
   }
 
   private VoteSession processData(VoteSession voteSession, Integer duration) {
