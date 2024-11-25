@@ -56,7 +56,7 @@ public class VoteSessionServiceImpl implements VoteSessionService {
     VoteSession voteSession =
         voteSessionMapper.voteSessionOpenDtoToVoteSession(voteSessionStartDto);
 
-    validateVoteSession(processData(voteSession, voteSessionStartDto.getDuration()));
+    validateVoteSession(processVoteSession(voteSession, voteSessionStartDto.getDuration()));
 
     return voteSessionRepository.save(voteSession);
   }
@@ -78,7 +78,7 @@ public class VoteSessionServiceImpl implements VoteSessionService {
   private void validateVote(Vote vote) {
     Map<String, String> errors = new HashMap<>();
 
-    if (vote.getUserId() == null || userService.existsById(vote.getUserId())) {
+    if (vote.getUserId() == null || !userService.existsById(vote.getUserId())) {
       errors.put("userId", "User not informed or does not exist");
     }
 
@@ -115,7 +115,7 @@ public class VoteSessionServiceImpl implements VoteSessionService {
     }
   }
 
-  private VoteSession processData(VoteSession voteSession, Integer duration) {
+  private VoteSession processVoteSession(VoteSession voteSession, Integer duration) {
     if (voteSession.getTitle() != null) {
       voteSession.setTitle(voteSession.getTitle().trim());
     }
