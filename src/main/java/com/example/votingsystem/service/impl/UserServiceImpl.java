@@ -22,6 +22,11 @@ public class UserServiceImpl implements UserService {
   private final UserMapper userMapper;
 
   @Override
+  public Boolean existsById(Integer id) {
+    return userRepository.existsById(id);
+  }
+
+  @Override
   public Optional<User> findByCpf(String cpf) {
     return userRepository.findByCpf(cpf);
   }

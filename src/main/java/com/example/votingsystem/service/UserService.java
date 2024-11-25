@@ -5,6 +5,8 @@ import com.example.votingsystem.entity.User;
 import java.util.Optional;
 
 public interface UserService {
+  Boolean existsById(Integer id);
+
   Optional<User> findByCpf(String cpf);
 
   User save(UserCreateDto user);
