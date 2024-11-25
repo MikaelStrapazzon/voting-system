@@ -4,6 +4,7 @@ import com.example.votingsystem.dto.response.generic.ErrorDetailsFieldResponse;
 import com.example.votingsystem.dto.response.generic.ErrorField;
 import com.example.votingsystem.dto.response.generic.ErrorResponse;
 import com.example.votingsystem.exception.custom.EntityValidationException;
+import com.example.votingsystem.exception.custom.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(EntityValidationException.class)
-  public ResponseEntity<ErrorDetailsFieldResponse> handleCustomValidationExceptions(
+  public ResponseEntity<ErrorDetailsFieldResponse> handleCustomEntityValidationExceptions(
       EntityValidationException ex, WebRequest request) {
     List<ErrorField> details =
         ex.getErrors().entrySet().stream()
@@ -30,5 +31,12 @@ public class GlobalExceptionHandler {
 
     return new ResponseEntity<>(
         new ErrorDetailsFieldResponse("Entity validation error", details), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(NotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleNotFoundExceptions(
+      EntityValidationException ex, WebRequest request) {
+
+    return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.NOT_FOUND);
   }
 }
