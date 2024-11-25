@@ -5,3 +5,6 @@ application:
 spring:
   application:
     name: voting-system
+  threads:
+    virtual:
+      enabled: true
