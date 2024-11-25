@@ -25,6 +25,9 @@ public class VoteSessionServiceImpl implements VoteSessionService {
   @Override
   @Transactional
   public VoteSession openNew(VoteSessionOpenDto voteSessionStartDto) {
+    voteSessionStartDto.setDuration(
+        voteSessionStartDto.getDuration() == null ? 60 : voteSessionStartDto.getDuration());
+
     if (voteSessionStartDto.getDuration() < 1 || voteSessionStartDto.getDuration() > 525960) {
       throw new EntityValidationException(
           "duration", "Duration must be between 1 and 525959 minutes (1 year)");
