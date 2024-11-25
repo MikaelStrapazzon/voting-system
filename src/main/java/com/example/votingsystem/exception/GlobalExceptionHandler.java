@@ -29,6 +29,6 @@ public class GlobalExceptionHandler {
             .collect(Collectors.toList());
 
     return new ResponseEntity<>(
-        new ErrorDetailsFieldResponse("Erro de validação", details), HttpStatus.BAD_REQUEST);
+        new ErrorDetailsFieldResponse("Entity validation error", details), HttpStatus.BAD_REQUEST);
   }
 }
