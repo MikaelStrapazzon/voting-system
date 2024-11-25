@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Data
@@ -20,6 +21,7 @@ public class User implements Serializable {
   @Column(name = "cpf")
   private String cpf;
 
+  @CreationTimestamp
   @Column(name = "created_at")
   private LocalDateTime createdAt;
 }
