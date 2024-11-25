@@ -32,6 +32,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public Long countUsers() {
+    return userRepository.count();
+  }
+
+  @Override
   @Transactional
   public User save(UserCreateDto newUser) {
     User user = userMapper.userCreateDtoToUser(newUser);

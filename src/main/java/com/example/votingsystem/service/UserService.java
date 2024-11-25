@@ -9,5 +9,7 @@ public interface UserService {
 
   Optional<User> findByCpf(String cpf);
 
+  Long countUsers();
+
   User save(UserCreateDto user);
 }
