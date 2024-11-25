@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final UserMapper userMapper;
 
+  @Override
   public Optional<User> findByCpf(String cpf) {
     return userRepository.findByCpf(cpf);
   }
