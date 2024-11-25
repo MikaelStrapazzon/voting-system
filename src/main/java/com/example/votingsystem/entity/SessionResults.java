@@ -13,16 +13,16 @@ public class SessionResults implements Serializable {
 
   @Id
   @Column(name = "vote_session_id")
-  private Long voteSessionId;
+  private Integer voteSessionId;
 
   @Column(name = "votes_yes", nullable = false)
-  private Integer votesYes;
+  private Long votesYes;
 
   @Column(name = "votes_no", nullable = false)
-  private Integer votesNo;
+  private Long votesNo;
 
   @Column(name = "non_voters", nullable = false)
-  private Integer nonVoters;
+  private Long nonVoters;
 
   @CreationTimestamp
   @Column(name = "created_at")

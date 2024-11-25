@@ -2,10 +2,15 @@ package com.example.votingsystem.service.impl;
 
 import com.example.votingsystem.dto.VoteDto;
 import com.example.votingsystem.dto.VoteSessionOpenDto;
+import com.example.votingsystem.dto.VoteSessionUpdateDto;
+import com.example.votingsystem.dto.repository.VotesSumDto;
+import com.example.votingsystem.entity.SessionResults;
 import com.example.votingsystem.entity.Vote;
 import com.example.votingsystem.entity.VoteSession;
 import com.example.votingsystem.exception.custom.EntityValidationException;
+import com.example.votingsystem.exception.custom.NotFoundException;
 import com.example.votingsystem.mapper.VoteSessionMapper;
+import com.example.votingsystem.repository.SessionResultsRepository;
 import com.example.votingsystem.repository.VoteRepository;
 import com.example.votingsystem.repository.VoteSessionRepository;
 import com.example.votingsystem.service.UserService;
@@ -30,6 +35,7 @@ public class VoteSessionServiceImpl implements VoteSessionService {
 
   private final VoteSessionRepository voteSessionRepository;
   private final VoteRepository voteRepository;
+  private final SessionResultsRepository sessionResultsRepository;
 
   private final VoteSessionMapper voteSessionMapper;
 
@@ -69,6 +75,35 @@ public class VoteSessionServiceImpl implements VoteSessionService {
 
   @Override
   @Transactional
+  public VoteSession update(VoteSession old, VoteSessionUpdateDto updateDto) {
+    old.setOpen(updateDto.isOpen());
+
+    validateVoteSession(old);
+
+    return voteSessionRepository.save(old);
+  }
+
+  @Override
+  public SessionResults close(Integer voteSessionId) {
+    return close(voteSessionId, userService.countUsers());
+  }
+
+  @Override
+  @Transactional
+  public SessionResults close(Integer voteSessionId, Long allUsers) {
+    var voteSession =
+        findById(voteSessionId)
+            .orElseThrow(
+                () ->
+                    new NotFoundException("Vote session with id " + voteSessionId + " not found"));
+
+    update(voteSession, new VoteSessionUpdateDto(false));
+
+    return calculateSessionResults(voteSessionId, allUsers);
+  }
+
+  @Override
+  @Transactional
   public Vote voteInSession(VoteDto voteDto) {
     Vote vote = voteSessionMapper.voteDtoToVote(voteDto);
 
@@ -77,8 +112,31 @@ public class VoteSessionServiceImpl implements VoteSessionService {
     return voteRepository.save(vote);
   }
 
+  @Transactional
+  protected SessionResults calculateSessionResults(Integer voteSessionId, Long userCount) {
+    SessionResults sessionResults = new SessionResults();
+    sessionResults.setVoteSessionId(voteSessionId);
+
+    VotesSumDto votesSumDto = voteRepository.countVotes(voteSessionId);
+    sessionResults.setVotesYes(votesSumDto.getYesVotes());
+    sessionResults.setVotesNo(votesSumDto.getNoVotes());
+    sessionResults.setNonVoters(
+        userCount
+            - (votesSumDto.getYesVotes() != null ? votesSumDto.getYesVotes() : 0)
+            - (votesSumDto.getNoVotes() != null ? votesSumDto.getNoVotes() : 0));
+
+    validateSessionResults(sessionResults);
+
+    return sessionResultsRepository.save(sessionResults);
+  }
+
   private Vote processVote(Vote vote) {
     return vote;
+  }
+
+  private void validateSessionResults(SessionResults sessionResults) {
+    // TODO
+    return;
   }
 
   private void validateVote(Vote vote) {
