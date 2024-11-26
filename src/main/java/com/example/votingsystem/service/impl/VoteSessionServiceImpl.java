@@ -9,6 +9,7 @@ import com.example.votingsystem.exception.custom.NotFoundException;
 import com.example.votingsystem.mapper.SessionResultsMapper;
 import com.example.votingsystem.mapper.VoteSessionMapper;
 import com.example.votingsystem.mapper.VoteSessionResultDtoMapper;
+import com.example.votingsystem.messaging.producer.VoteSessionProducer;
 import com.example.votingsystem.repository.SessionResultsRepository;
 import com.example.votingsystem.repository.VoteRepository;
 import com.example.votingsystem.repository.VoteSessionRepository;
@@ -32,6 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class VoteSessionServiceImpl implements VoteSessionService {
 
   private final UserService userService;
+
+  private final VoteSessionProducer voteSessionProducer;
 
   private final VoteSessionRepository voteSessionRepository;
   private final VoteRepository voteRepository;
@@ -77,6 +80,8 @@ public class VoteSessionServiceImpl implements VoteSessionService {
 
     validateVoteSession(processVoteSession(voteSession, voteSessionStartDto.getDuration()));
 
+    voteSessionProducer.openVoteSession(voteSession);
+
     return voteSessionRepository.save(voteSession);
   }
 
@@ -106,7 +111,12 @@ public class VoteSessionServiceImpl implements VoteSessionService {
 
     update(voteSession, new VoteSessionUpdateDto(false));
 
-    return saveSessionResults(generateVoteSessionResults(voteSessionId, allUsers));
+    SessionResults results =
+        saveSessionResults(generateVoteSessionResults(voteSessionId, allUsers));
+
+    voteSessionProducer.endVoteSession(results);
+
+    return results;
   }
 
   @Override
@@ -143,7 +153,10 @@ public class VoteSessionServiceImpl implements VoteSessionService {
 
     validateVote(processVote(vote));
 
-    return voteRepository.save(vote);
+    vote = voteRepository.save(vote);
+    voteSessionProducer.userVotedInVoteSession(vote);
+
+    return vote;
   }
 
   @Transactional
