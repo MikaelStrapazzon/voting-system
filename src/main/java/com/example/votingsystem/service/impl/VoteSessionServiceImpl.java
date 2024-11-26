@@ -1,18 +1,17 @@
 package com.example.votingsystem.service.impl;
 
-import com.example.votingsystem.dto.VoteDto;
-import com.example.votingsystem.dto.VoteSessionOpenDto;
-import com.example.votingsystem.dto.VoteSessionUpdateDto;
-import com.example.votingsystem.dto.repository.VotesSumDto;
+import com.example.votingsystem.dto.*;
 import com.example.votingsystem.entity.SessionResults;
 import com.example.votingsystem.entity.Vote;
 import com.example.votingsystem.entity.VoteSession;
 import com.example.votingsystem.exception.custom.EntityValidationException;
 import com.example.votingsystem.exception.custom.NotFoundException;
+import com.example.votingsystem.mapper.SessionResultsMapper;
 import com.example.votingsystem.mapper.VoteSessionMapper;
 import com.example.votingsystem.repository.SessionResultsRepository;
 import com.example.votingsystem.repository.VoteRepository;
 import com.example.votingsystem.repository.VoteSessionRepository;
+import com.example.votingsystem.repository.dto.VotesSumDto;
 import com.example.votingsystem.service.UserService;
 import com.example.votingsystem.service.VoteSessionService;
 import java.time.LocalDateTime;
@@ -38,6 +37,7 @@ public class VoteSessionServiceImpl implements VoteSessionService {
   private final SessionResultsRepository sessionResultsRepository;
 
   private final VoteSessionMapper voteSessionMapper;
+  private final SessionResultsMapper sessionResultsMapper;
 
   @Override
   public Optional<VoteSession> findById(Integer id) {
@@ -99,7 +99,7 @@ public class VoteSessionServiceImpl implements VoteSessionService {
 
     update(voteSession, new VoteSessionUpdateDto(false));
 
-    return calculateSessionResults(voteSessionId, allUsers);
+    return saveSessionResults(generateVoteSessionResults(voteSessionId, allUsers));
   }
 
   @Override
@@ -113,21 +113,33 @@ public class VoteSessionServiceImpl implements VoteSessionService {
   }
 
   @Transactional
-  protected SessionResults calculateSessionResults(Integer voteSessionId, Long userCount) {
-    SessionResults sessionResults = new SessionResults();
-    sessionResults.setVoteSessionId(voteSessionId);
-
-    VotesSumDto votesSumDto = voteRepository.countVotes(voteSessionId);
-    sessionResults.setVotesYes(votesSumDto.getYesVotes());
-    sessionResults.setVotesNo(votesSumDto.getNoVotes());
-    sessionResults.setNonVoters(
-        userCount
-            - (votesSumDto.getYesVotes() != null ? votesSumDto.getYesVotes() : 0)
-            - (votesSumDto.getNoVotes() != null ? votesSumDto.getNoVotes() : 0));
+  protected SessionResults saveSessionResults(SessionResultsDto sessionResultsDto) {
+    SessionResults sessionResults =
+        sessionResultsMapper.sessionResultsDtoToSessionResults(sessionResultsDto);
 
     validateSessionResults(sessionResults);
 
     return sessionResultsRepository.save(sessionResults);
+  }
+
+  private SessionResultsDto generateVoteSessionResults(Integer voteSessionId) {
+    return generateVoteSessionResults(voteSessionId, userService.countUsers());
+  }
+
+  private SessionResultsDto generateVoteSessionResults(Integer voteSessionId, Long countUsers) {
+    var validVotes = calculateValidVotes(voteSessionId);
+
+    return new SessionResultsDto(
+        voteSessionId,
+        validVotes.yesVotes(),
+        validVotes.noVotes(),
+        countUsers - validVotes.yesVotes() - validVotes.noVotes());
+  }
+
+  private ValidVotes calculateValidVotes(Integer voteSessionId) {
+    VotesSumDto votesSumDto = voteRepository.countVotes(voteSessionId);
+
+    return new ValidVotes(votesSumDto.getYesVotes(), votesSumDto.getNoVotes());
   }
 
   private Vote processVote(Vote vote) {
