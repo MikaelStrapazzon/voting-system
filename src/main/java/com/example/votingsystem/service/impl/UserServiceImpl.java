@@ -5,6 +5,7 @@ import com.example.votingsystem.dto.UserCreateDto;
 import com.example.votingsystem.entity.User;
 import com.example.votingsystem.exception.custom.EntityValidationException;
 import com.example.votingsystem.mapper.UserMapper;
+import com.example.votingsystem.messaging.producer.UserProducer;
 import com.example.votingsystem.repository.UserRepository;
 import com.example.votingsystem.service.UserService;
 import java.util.HashMap;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
   private final CpfValidatorClient cpfValidatorClient;
+  private final UserProducer userProducer;
+
   private final UserRepository userRepository;
   private final UserMapper userMapper;
 
@@ -45,7 +48,11 @@ public class UserServiceImpl implements UserService {
 
     validateUser(processData(user));
 
-    return userRepository.save(user);
+    user = userRepository.save(user);
+
+    userProducer.createUserEvent(user);
+
+    return user;
   }
 
   private User processData(User user) {
