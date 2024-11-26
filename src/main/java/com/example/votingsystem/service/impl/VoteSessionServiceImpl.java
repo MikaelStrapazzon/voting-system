@@ -8,6 +8,7 @@ import com.example.votingsystem.exception.custom.EntityValidationException;
 import com.example.votingsystem.exception.custom.NotFoundException;
 import com.example.votingsystem.mapper.SessionResultsMapper;
 import com.example.votingsystem.mapper.VoteSessionMapper;
+import com.example.votingsystem.mapper.VoteSessionResultDtoMapper;
 import com.example.votingsystem.repository.SessionResultsRepository;
 import com.example.votingsystem.repository.VoteRepository;
 import com.example.votingsystem.repository.VoteSessionRepository;
@@ -38,10 +39,16 @@ public class VoteSessionServiceImpl implements VoteSessionService {
 
   private final VoteSessionMapper voteSessionMapper;
   private final SessionResultsMapper sessionResultsMapper;
+  private final VoteSessionResultDtoMapper voteSessionResultDtoMapper;
 
   @Override
   public Optional<VoteSession> findById(Integer id) {
     return voteSessionRepository.findById(id);
+  }
+
+  @Override
+  public Optional<SessionResults> findSessionResultByVoteSessionId(Integer id) {
+    return sessionResultsRepository.findById(id);
   }
 
   @Override
@@ -100,6 +107,33 @@ public class VoteSessionServiceImpl implements VoteSessionService {
     update(voteSession, new VoteSessionUpdateDto(false));
 
     return saveSessionResults(generateVoteSessionResults(voteSessionId, allUsers));
+  }
+
+  @Override
+  public VoteSessionResultDto voteSessionResult(Integer voteSessionId) {
+    var voteSession =
+        findById(voteSessionId).orElseThrow(() -> new NotFoundException("Vote session not found"));
+
+    VoteSessionResultDto resultDto;
+
+    if (!voteSession.getOpen()) {
+      resultDto =
+          voteSessionResultDtoMapper.VoteSessionAndSessionResultsToVoteSessionResultDto(
+              voteSession,
+              findSessionResultByVoteSessionId(voteSessionId)
+                  .orElseThrow(
+                      () ->
+                          new NotFoundException(
+                              "Voting session closed but no results were counted")));
+      resultDto.setOpen(false);
+    } else {
+      resultDto =
+          voteSessionResultDtoMapper.VoteSessionAndSessionResultsDtoToVoteSessionResultDto(
+              voteSession, generateVoteSessionResults(voteSessionId));
+      resultDto.setOpen(true);
+    }
+
+    return resultDto;
   }
 
   @Override

@@ -2,6 +2,7 @@ package com.example.votingsystem.service;
 
 import com.example.votingsystem.dto.VoteDto;
 import com.example.votingsystem.dto.VoteSessionOpenDto;
+import com.example.votingsystem.dto.VoteSessionResultDto;
 import com.example.votingsystem.dto.VoteSessionUpdateDto;
 import com.example.votingsystem.entity.SessionResults;
 import com.example.votingsystem.entity.Vote;
@@ -11,6 +12,8 @@ import java.util.Optional;
 
 public interface VoteSessionService {
   Optional<VoteSession> findById(Integer id);
+
+  Optional<SessionResults> findSessionResultByVoteSessionId(Integer id);
 
   List<VoteSession> findAllNeedClose();
 
@@ -25,4 +28,6 @@ public interface VoteSessionService {
   SessionResults close(Integer voteSessionId);
 
   SessionResults close(Integer voteSessionId, Long allUsers);
+
+  VoteSessionResultDto voteSessionResult(Integer voteSessionId);
 }
