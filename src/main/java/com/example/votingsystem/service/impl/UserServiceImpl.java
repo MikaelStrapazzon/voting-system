@@ -1,5 +1,6 @@
 package com.example.votingsystem.service.impl;
 
+import com.example.votingsystem.client.CpfValidatorClient;
 import com.example.votingsystem.dto.UserCreateDto;
 import com.example.votingsystem.entity.User;
 import com.example.votingsystem.exception.custom.EntityValidationException;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+  private final CpfValidatorClient cpfValidatorClient;
   private final UserRepository userRepository;
   private final UserMapper userMapper;
 
@@ -67,6 +69,8 @@ public class UserServiceImpl implements UserService {
       errors.put("username", "Username cannot exceed 50 characters");
     }
 
+    cpfValidatorClient.validateCpf(user.getCpf());
+
     // TODO verify in external API
     if (user.getCpf() == null || user.getCpf().isEmpty()) {
       errors.put("cpf", "CPF is required");
@@ -74,10 +78,16 @@ public class UserServiceImpl implements UserService {
       errors.put("cpf", "CPF must be exactly 11 digits");
     } else if (findByCpf(user.getCpf()).isPresent()) {
       errors.put("cpf", "CPF already registered");
+    } else if (!validateCpf(user.getCpf())) {
+      errors.put("cpf", "CPF is invalid");
     }
 
     if (!errors.isEmpty()) {
       throw new EntityValidationException(errors);
     }
+  }
+
+  private Boolean validateCpf(String cpf) {
+    return cpfValidatorClient.validateCpf(cpf).valid();
   }
 }
