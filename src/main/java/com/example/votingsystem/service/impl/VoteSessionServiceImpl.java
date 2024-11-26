@@ -146,6 +146,22 @@ public class VoteSessionServiceImpl implements VoteSessionService {
     return vote;
   }
 
+  private VoteSession processVoteSession(VoteSession voteSession, Integer duration) {
+    if (voteSession.getTitle() != null) {
+      voteSession.setTitle(voteSession.getTitle().trim());
+    }
+
+    if (voteSession.getDescription() != null) {
+      voteSession.setDescription(voteSession.getDescription().trim());
+    }
+
+    voteSession.setStartTime(LocalDateTime.now());
+    voteSession.setEndTime(voteSession.getStartTime().plusMinutes(duration));
+    voteSession.setOpen(true);
+
+    return voteSession;
+  }
+
   private void validateSessionResults(SessionResults sessionResults) {
     // TODO
     return;
@@ -189,22 +205,6 @@ public class VoteSessionServiceImpl implements VoteSessionService {
     if (!errors.isEmpty()) {
       throw new EntityValidationException(errors);
     }
-  }
-
-  private VoteSession processVoteSession(VoteSession voteSession, Integer duration) {
-    if (voteSession.getTitle() != null) {
-      voteSession.setTitle(voteSession.getTitle().trim());
-    }
-
-    if (voteSession.getDescription() != null) {
-      voteSession.setDescription(voteSession.getDescription().trim());
-    }
-
-    voteSession.setStartTime(LocalDateTime.now());
-    voteSession.setEndTime(voteSession.getStartTime().plusMinutes(duration));
-    voteSession.setOpen(true);
-
-    return voteSession;
   }
 
   private void validateVoteSession(VoteSession voteSession) {
