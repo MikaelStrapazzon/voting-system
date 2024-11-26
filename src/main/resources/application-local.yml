@@ -13,3 +13,8 @@ spring:
   
   flyway:
     enabled: true
+
+app:
+  cpf-validator:
+    url: "https://api.invertexto.com/v1"
+    token: "16307|QoPiisj5gPWdwxD0mXQ77ZwYV0CgfmRq"
