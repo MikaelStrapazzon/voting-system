@@ -1,0 +1,16 @@
+<configuration>
+    <property name="defaultPattern"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{traceId}] %-5level %logger{5} - %msg%n"/>
+
+    <property name="rootLoggingLevel" value="${LOGGING_LEVEL_ROOT:-INFO}"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${defaultPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="${rootLoggingLevel}">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

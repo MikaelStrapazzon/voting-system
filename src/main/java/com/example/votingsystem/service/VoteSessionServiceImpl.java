@@ -1,4 +1,4 @@
-package com.example.votingsystem.service.impl;
+package com.example.votingsystem.service;
 
 import com.example.votingsystem.dto.*;
 import com.example.votingsystem.entity.SessionResults;
@@ -14,8 +14,6 @@ import com.example.votingsystem.repository.SessionResultsRepository;
 import com.example.votingsystem.repository.VoteRepository;
 import com.example.votingsystem.repository.VoteSessionRepository;
 import com.example.votingsystem.repository.dto.VotesSumDto;
-import com.example.votingsystem.service.UserService;
-import com.example.votingsystem.service.VoteSessionService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;

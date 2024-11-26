@@ -13,9 +13,11 @@ import com.example.votingsystem.dto.response.generic.SuccessResponse;
 import com.example.votingsystem.mapper.controller.VoteSessionControllerMapper;
 import com.example.votingsystem.service.VoteSessionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = V1_VOTE_SESSION, produces = APPLICATION_JSON_VALUE)
@@ -27,9 +29,13 @@ public class VoteSessionController {
   @PostMapping(value = V1_VOTE_SESSION_OPEN)
   public ResponseEntity<SuccessResponse<OpenNewVoteSessionResponse>> openNewVoteSession(
       @RequestBody OpenNewVoteSessionRequest request) {
+    LOGGER.info("Opening Vote Session: {}", request.title());
+
     var voteSession =
         voteSessionService.openNew(
             voteSessionControllerMapper.openNewVoteSessionRequestToVoteSessionOpenDto(request));
+
+    LOGGER.info("Open Vote Session: {} - {}", voteSession.getId(), voteSession.getTitle());
 
     return ResponseEntity.ok(
         new SuccessResponse<>(
@@ -41,7 +47,11 @@ public class VoteSessionController {
       @PathVariable Integer sessionId,
       @PathVariable Integer userId,
       @RequestBody NewUserVoteRequest request) {
+    LOGGER.info("Including user vote in Vote Session: {} - {}", userId, sessionId);
+
     var vote = voteSessionService.voteInSession(new VoteDto(userId, sessionId, request.vote()));
+
+    LOGGER.info("Included user vote in Vote Session: {} - {}", userId, sessionId);
 
     return ResponseEntity.ok(
         new SuccessResponse<>(voteSessionControllerMapper.voteToNewUserVoteResponse(vote)));

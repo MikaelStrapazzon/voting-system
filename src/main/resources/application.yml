@@ -19,3 +19,6 @@ spring:
           destination: end-vote-session
         producer-user-vote:
           destination: user-vote
+logging:
+  level:
+    root: INFO
