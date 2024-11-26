@@ -1,14 +1,14 @@
 spring:
-  datasource:
-    url: jdbc:oracle:thin:@localhost:1521/votingsystem
-    username: dev_db_user
-    password: dev_db_password
-    driver-class-name: oracle.jdbc.OracleDriver
   cloud:
     stream:
       kafka:
         binder:
-          brokers: 127.0.0.1:9094
+          brokers: kafka:9092
+  datasource:
+    url: jdbc:oracle:thin:@oracle-db/votingsystem
+    username: dev_db_user
+    password: dev_db_password
+    driver-class-name: oracle.jdbc.OracleDriver
   
   jpa:
     hibernate:
