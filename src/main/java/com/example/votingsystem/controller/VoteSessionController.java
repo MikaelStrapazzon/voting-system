@@ -8,6 +8,7 @@ import com.example.votingsystem.dto.request.NewUserVoteRequest;
 import com.example.votingsystem.dto.request.OpenNewVoteSessionRequest;
 import com.example.votingsystem.dto.response.NewUserVoteResponse;
 import com.example.votingsystem.dto.response.OpenNewVoteSessionResponse;
+import com.example.votingsystem.dto.response.VoteSessionResultResponse;
 import com.example.votingsystem.dto.response.generic.SuccessResponse;
 import com.example.votingsystem.mapper.controller.VoteSessionControllerMapper;
 import com.example.votingsystem.service.VoteSessionService;
@@ -44,5 +45,15 @@ public class VoteSessionController {
 
     return ResponseEntity.ok(
         new SuccessResponse<>(voteSessionControllerMapper.voteToNewUserVoteResponse(vote)));
+  }
+
+  @GetMapping(value = V1_VOTE_SESSION_GET_RESULT)
+  public ResponseEntity<SuccessResponse<VoteSessionResultResponse>> getResult(
+      @PathVariable Integer sessionId) {
+    var result = voteSessionService.voteSessionResult(sessionId);
+
+    return ResponseEntity.ok(
+        new SuccessResponse<>(
+            voteSessionControllerMapper.voteSessionResultDtoToVoteSessionResultResponse(result)));
   }
 }
