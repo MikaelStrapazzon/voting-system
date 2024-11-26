@@ -8,3 +8,14 @@ spring:
   threads:
     virtual:
       enabled: true
+  cloud:
+    stream:
+      bindings:
+        producer-create-user:
+          destination: create-user
+        producer-start-vote-session:
+          destination: start-vote-session
+        producer-end-vote-session:
+          destination: end-vote-session
+        producer-user-vote:
+          destination: user-vote
