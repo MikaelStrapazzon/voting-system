@@ -1,4 +1,4 @@
-package com.example.votingsystem.messaging.producer.dto;
+package infra.messaging.producer.dto;
 
 import java.time.LocalDateTime;
 import lombok.Data;

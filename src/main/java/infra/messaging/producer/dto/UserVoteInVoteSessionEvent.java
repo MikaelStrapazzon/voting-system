@@ -1,4 +1,4 @@
-package com.example.votingsystem.messaging.producer.dto;
+package infra.messaging.producer.dto;
 
 import lombok.Data;
 

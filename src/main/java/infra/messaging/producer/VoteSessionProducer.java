@@ -1,12 +1,12 @@
-package com.example.votingsystem.messaging.producer;
+package infra.messaging.producer;
 
 import com.example.votingsystem.entity.SessionResults;
 import com.example.votingsystem.entity.Vote;
 import com.example.votingsystem.entity.VoteSession;
 import com.example.votingsystem.mapper.messaging.VoteSessionProducerMapper;
-import com.example.votingsystem.messaging.producer.dto.EndVoteSessionEvent;
-import com.example.votingsystem.messaging.producer.dto.OpenVoteSessionEvent;
-import com.example.votingsystem.messaging.producer.dto.UserVoteInVoteSessionEvent;
+import infra.messaging.producer.dto.EndVoteSessionEvent;
+import infra.messaging.producer.dto.OpenVoteSessionEvent;
+import infra.messaging.producer.dto.UserVoteInVoteSessionEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.example.votingsystem.mapper.messaging;
 
 import com.example.votingsystem.entity.User;
-import com.example.votingsystem.messaging.producer.dto.UserCreateEvent;
+import infra.messaging.producer.dto.UserCreateEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

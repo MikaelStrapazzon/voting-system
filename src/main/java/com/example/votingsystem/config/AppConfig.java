@@ -1,16 +1,17 @@
 package com.example.votingsystem.config;
 
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
+
+import java.util.Collections;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestClient;
 
-import java.util.Collections;
-
-import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
-
 @Configuration
+@ComponentScan(basePackages = {"com.example.votingsystem", "infra"})
 public class AppConfig {
 
   @Bean
