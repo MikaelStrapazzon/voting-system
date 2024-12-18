@@ -1,6 +1,7 @@
 package com.example.votingsystem.config;
 
 import com.example.votingsystem.dto.enums.PagesEnum;
+import infra.redis.PagesRedisTopic;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,32 +11,28 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class PagesInitializerConfig {
-
-  private final String pagePrefixTopic = "page-configurations:";
-
-  private final StringRedisTemplate redisTemplate;
+  private final PagesRedisTopic pagesRedisTopic;
 
   @Bean
   public ApplicationRunner initializeRedis() {
     return args -> {
       for (PagesEnum topic : PagesEnum.values()) {
-        String topicName = pagePrefixTopic + topic.name();
+        String topicName = topic.name();
         String jsonFileName = topic.getJsonFileName();
 
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(topicName))) {
+        if (Boolean.TRUE.equals(pagesRedisTopic.exists(topic))) {
           System.out.println("Topic '" + topicName + "' already loaded");
           continue;
         }
 
         String jsonContent = loadJsonFile(jsonFileName);
         if (jsonContent != null) {
-          redisTemplate.opsForValue().set(topicName, jsonContent);
+          pagesRedisTopic.save(topic, jsonContent);
           LOGGER.info("Topic '{}' initialized with content:{}", topicName, jsonContent);
         } else {
           LOGGER.error("Error initializing JSON for topic '{}'", topicName);
