@@ -51,6 +51,10 @@ dependencies {
 
     runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
 
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:oracle-xe:1.19.0'
+    testImplementation 'org.testcontainers:kafka:1.19.0'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
