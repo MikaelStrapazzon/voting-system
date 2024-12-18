@@ -1,4 +1,4 @@
-package com.example.votingsystem.controller.VoteSessionControllerTest;
+package com.example.votingsystem.controller.voteSessionControllerTest;
 
 import static com.example.votingsystem.controller.util.Endpoints.V1_VOTE_SESSION;
 import static com.example.votingsystem.controller.util.Endpoints.V1_VOTE_SESSION_OPEN;
