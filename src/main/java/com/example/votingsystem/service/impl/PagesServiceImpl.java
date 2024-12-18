@@ -1,9 +1,9 @@
 package com.example.votingsystem.service.impl;
 
-import com.example.votingsystem.dto.enums.PagesEnum;
 import com.example.votingsystem.exception.custom.NotFoundException;
 import com.example.votingsystem.service.PagesService;
 import infra.redis.PagesRedisTopic;
+import infra.redis.enums.PagesEnum;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

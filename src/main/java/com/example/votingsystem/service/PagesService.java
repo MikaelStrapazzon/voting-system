@@ -1,7 +1,6 @@
 package com.example.votingsystem.service;
 
-import com.example.votingsystem.dto.enums.PagesEnum;
-
+import infra.redis.enums.PagesEnum;
 import java.util.Optional;
 
 public interface PagesService {

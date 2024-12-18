@@ -1,4 +1,4 @@
-package com.example.votingsystem.dto.enums;
+package infra.redis.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PagesEnum {
   NewVoteSession("NewVoteSession.json"),
-  UserVote("UserVote.json"),
-  VoteSessionResult("VoteSessionResult.json");
+  UserVote("UserVote.json");
 
   private final String jsonFileName;
 }

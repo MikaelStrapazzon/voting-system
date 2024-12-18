@@ -1,6 +1,6 @@
 package infra.redis;
 
-import com.example.votingsystem.dto.enums.PagesEnum;
+import infra.redis.enums.PagesEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
