@@ -11,10 +11,12 @@ integrates with Oracle Database and Kafka for message processing.
 - **Spring Data JPA**: For ORM and database interactions.
 - **Spring Cloud Stream**: For Kafka messaging.
 - **Oracle Database**: To persist data.
+- **Redis**: Used as auxiliary storage, for topic management purposes.
 - **Flyway**: For database versioning and migrations.
 - **MapStruct**: For object mapping.
 - **Lombok**: To reduce boilerplate code.
 - **SpringDoc OpenAPI**: For API documentation and Swagger UI.
+- **Testcontainers**: For integrated testing in isolated environments (Oracle Database and Kafka) using containers.
 
 ## Development
 
@@ -60,6 +62,7 @@ You can access the API at `http://localhost:8080` or use Swagger UI at `http://l
 - **8080**: API
 - **1521**: Oracle Database
 - **9092**: Kafka
+- **6379**: Redis
 
 ## Production
 
