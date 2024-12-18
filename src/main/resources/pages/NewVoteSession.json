@@ -1,4 +1,33 @@
 {
-  "name": "Topic 1",
-  "description": "This is topic 1."
+  "tipo": "FORMULARIO",
+  "titulo": "Iniciar Nova Assembleia",
+  "itens": [
+    {
+      "tipo": "INPUT_TEXTO",
+      "id": "title",
+      "titulo": "Titulo",
+      "valor": "Texto"
+    },
+    {
+      "tipo": "INPUT_TEXTO",
+      "id": "description",
+      "titulo": "Descrição",
+      "valor": "Texto"
+    },
+    {
+      "tipo": "INPUT_NUMERO",
+      "id": "duration",
+      "titulo": "Duração",
+      "placeholder": "Duração em minutos",
+      "valor": 60
+    }
+  ],
+  "button-confirm": {
+    "texto": "Iniciar",
+    "url": "/v1/vote-session/open"
+  },
+  "button-cancel": {
+    "texto": "Cancelar",
+    "url": "previous()"
+  }
 }

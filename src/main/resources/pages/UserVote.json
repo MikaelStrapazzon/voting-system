@@ -1,4 +1,40 @@
 {
-  "name": "Topic 2",
-  "description": "This is topic 2."
+  "tipo": "FORMULARIO",
+  "titulo": "Registrar Novo Voto",
+  "itens": [
+    {
+      "tipo": "INPUT_NUMERO",
+      "local": "PATH",
+      "id": "sessionId",
+      "titulo": "ID da Assembleia",
+      "valor": null
+    },
+    {
+      "tipo": "INPUT_SELECT",
+      "id": "vote",
+      "titulo": "Voto",
+      "opcoes": [
+        {
+          "texto": "Sim",
+          "valor": true
+        },
+        {
+          "texto": "Não",
+          "valor": false
+        }
+      ],
+      "valor": null
+    }
+  ],
+  "button-confirm": {
+    "texto": "Registrar Voto",
+    "url": "/v1/vote-session/{sessionId}/vote/{userId}",
+    "path": {
+      "userId": "session.userId"
+    }
+  },
+  "button-cancel": {
+    "texto": "Cancelar",
+    "url": "previous()"
+  }
 }
