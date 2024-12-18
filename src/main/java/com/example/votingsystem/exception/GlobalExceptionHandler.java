@@ -33,17 +33,17 @@ public class GlobalExceptionHandler {
             .collect(Collectors.toList());
 
     LOGGER.warn("EntityValidationException: {}", details);
-    
+
     return new ResponseEntity<>(
         new ErrorDetailsFieldResponse("Entity validation error", details), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(NotFoundException.class)
   public ResponseEntity<ErrorResponse> handleNotFoundExceptions(
-      EntityValidationException ex, WebRequest request) {
+      NotFoundException ex, WebRequest request) {
 
     LOGGER.warn("NotFoundException: {}", ex.getMessage());
-    
+
     return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.NOT_FOUND);
   }
 }
